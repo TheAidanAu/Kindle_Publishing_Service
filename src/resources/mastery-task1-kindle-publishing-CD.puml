@@ -1,1 +1,115 @@
-PARTICIPANTS: use this file for creating the class diagram in mastery task 01
+@startuml
+
+/'1. Activity classes '/
+class GetBookActivity {
+    - recommendationServiceClient: RecommendationsServiceClient
+    - catalogDao: CatalogDao
+
+    + GetBookActivity(catalogDao: CatalogDao,
+    recommendationServiceClient: RecommendationsServiceClient)
+    + execute(request: GetBookRequest): GetBookResponse
+}
+
+'may not needed'
+'class GetPublishingStatusActivity {
+'
+'}
+
+class RemoveBookFromCatalogActivity {
+    - catalogDao: CatalogDao
+
+    + RemoveBookFromCatalogActivity(catalogDao: CatalogDao)
+    + execute(removeBookFromCatalogRequest: RemoveBookFromCatalogRequest): RemoveBookFromCatalogResponse
+}
+
+class SubmitBookForPublishingActivity {
+    - publishingStatusDao: PublishingStatusDao
+
+    + SubmitBookForPublishingActivity(publishingStatusDao: PublishingStatusDao)
+    + execute(request: SubmitBookForPublishingRequest): SubmitBookForPublishingResponse
+}
+
+/'2. DAO Classes '/
+
+class CatalogDao {
+    - dynamoDbMapper: DynamoDBMapper
+
+    + CatalogDao(dynamoDbMapper: DynamoDBMapper)
+    + getBookFromCatalog(bookId: String): CatalogItemVersion
+    - getLatestVersionOfBook(bookId: String): CatalogItemVersion
+}
+
+class PublishingStatusDao {
+    - ADDITIONAL_NOTES_PREFIX: String
+    - dynamoDbMapper: DynamoDBMapper
+
+    + PublishingStatusDao(dynamoDbMapper: DynamoDBMapper)
+    + setPublishingStatus(publishingRecordId: String,
+                        publishingRecordStatus: PublishingRecordStatus,
+                        bookId: String): PublishingStatusItem
+    + setPublishingStatus(publishingRecordId: String,
+                            publishingRecordStatus: PublishingRecordStatus,
+                            bookId: String,
+                            message: String): PublishingStatusItem
+}
+
+
+/'3. Exception Classes '/
+class BookNotFoundException {
+    - serialVersionUID
+
+    + BookNotFoundException(message: String)
+    + BookNotFoundException(message: String, cause: Throwable)
+}
+
+class PublishingStatusNotFoundException {
+    - serialVersionUID
+
+    + PublishingStatusNotFoundException(message: String)
+    + PublishingStatusNotFoundException(message: String, cause: Throwable)
+}
+
+
+/'4. DynamoDB Model Classes'/
+class CatalogItemVersion{
+    - @DynamoDBHashKey bookId: String
+    - @DynamoDBRangeKey version: int
+    - inactive: boolean
+    - author: String
+    - text: String
+    - genre:BookGenre
+}
+
+class PublishingStatusItem{
+    - @DynamoDBHashKey publishingRecordId: String
+    - @DynamoDBRangeKey status: PublishingRecordStatus
+    - statusMessage: String
+    - bookId: String
+}
+
+/'5. Client Classes  '/
+class RecommendationsServiceClient {
+    - recommendationsService: RecommendationsService
+
+    + RecommendationsServiceClient(service: RecommendationsService)
+    + getBookRecommendations(genre: BookGenre): List<BookRecommendation>
+}
+
+/'20 tests passed
+/' Relationship '/
+CatalogItemVersion -- PublishingStatusItem
+
+CatalogDao -- GetBookActivity
+RecommendationsServiceClient -- GetBookActivity
+CatalogDao -- RemoveBookFromCatalogActivity
+
+PublishingStatusDao -- SubmitBookForPublishingActivity
+
+CatalogDao -- CatalogItemVersion
+PublishingStatusDao -- PublishingStatusItem
+
+CatalogDao --|> BookNotFoundException : uses / throws
+
+/'6. Metrics Classes (optional) '/
+
+@enduml
