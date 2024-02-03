@@ -54,8 +54,25 @@ public class CatalogDao {
 
         List<CatalogItemVersion> results = dynamoDbMapper.query(CatalogItemVersion.class, queryExpression);
         if (results.isEmpty()) {
-            return null;
+            throw new BookNotFoundException(bookId);
+            // old code
+            // return null;
         }
         return results.get(0);
+    }
+
+    //TODO: update CatalogDao to implement the soft delete functionality
+    public CatalogItemVersion removeBook(String bookId) {
+        // mark the current version's inactive attribute as true
+        // load and save
+        CatalogItemVersion latestBook = getLatestVersionOfBook(bookId);
+        if (latestBook.isInactive()) {
+            throw new BookNotFoundException(bookId);
+        }
+        latestBook.setInactive(true);
+        dynamoDbMapper.save(latestBook);
+
+        return latestBook;
+
     }
 }
