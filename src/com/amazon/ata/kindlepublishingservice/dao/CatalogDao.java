@@ -54,9 +54,7 @@ public class CatalogDao {
 
         List<CatalogItemVersion> results = dynamoDbMapper.query(CatalogItemVersion.class, queryExpression);
         if (results.isEmpty()) {
-            throw new BookNotFoundException(bookId);
-            // old code
-            // return null;
+            return null;
         }
         return results.get(0);
     }
