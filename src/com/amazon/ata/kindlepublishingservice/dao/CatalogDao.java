@@ -42,15 +42,20 @@ public class CatalogDao {
         return book;
     }
 
+    // Retrieves the latest version of a book from the CatalogItemVersions table
     // Returns null if no version exists for the provided bookId
     private CatalogItemVersion getLatestVersionOfBook(String bookId) {
         CatalogItemVersion book = new CatalogItemVersion();
         book.setBookId(bookId);
 
+        // This is to specify the query parameters.
         DynamoDBQueryExpression<CatalogItemVersion> queryExpression = new DynamoDBQueryExpression()
             .withHashKeyValues(book)
             .withScanIndexForward(false)
             .withLimit(1);
+        //withHashKeyValues(book): Sets the hash key value for the query (filtering by bookId).
+        //withScanIndexForward(false): Sets the scan direction to descending order (latest version first).
+        //withLimit(1): Limits the query result to only one item (the latest version).
 
         List<CatalogItemVersion> results = dynamoDbMapper.query(CatalogItemVersion.class, queryExpression);
         if (results.isEmpty()) {
