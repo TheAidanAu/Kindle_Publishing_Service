@@ -61,18 +61,16 @@ public class CatalogDao {
         return results.get(0);
     }
 
-    //TODO: update CatalogDao to implement the soft delete functionality
+    //TODO: update CatalogDao to implement the soft delete functionality (DONE)
+    // then use it in the RemoveBookFromCatalogActivity class (DONE)
     public CatalogItemVersion removeBook(String bookId) {
-        // mark the current version's inactive attribute as true
+        // mark the latest book's inactive attribute as true
+        // only the latest book is active
+        // use an existing method in the same class to get the latest book
         // load and save
-        CatalogItemVersion latestBook = getLatestVersionOfBook(bookId);
-        if (latestBook.isInactive()) {
-            throw new BookNotFoundException(bookId);
-        }
+        CatalogItemVersion latestBook = this.getBookFromCatalog(bookId);
         latestBook.setInactive(true);
         dynamoDbMapper.save(latestBook);
-
         return latestBook;
-
     }
 }

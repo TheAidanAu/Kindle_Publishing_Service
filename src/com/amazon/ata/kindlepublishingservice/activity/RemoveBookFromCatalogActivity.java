@@ -13,17 +13,12 @@ import javax.inject.Inject;
 public class RemoveBookFromCatalogActivity {
     private CatalogDao catalogDao; //CatalogDao to access the Catalog table
     @Inject
-    // may have to put CatalogDao as a parameter
     RemoveBookFromCatalogActivity(CatalogDao catalogDao) {
         this.catalogDao = catalogDao;
     }
     public RemoveBookFromCatalogResponse execute(RemoveBookFromCatalogRequest removeBookFromCatalogRequest) {
         String bookId = removeBookFromCatalogRequest.getBookId();
-        CatalogItemVersion catalogItem = catalogDao.removeBook(bookId);
-//        if (catalogItem == null) {
-//            throw new BookNotFoundException(bookId);
-//        }
-
+        CatalogItemVersion latestVersionToSetInactive = catalogDao.removeBook(bookId);
         return new RemoveBookFromCatalogResponse();
     }
 }
