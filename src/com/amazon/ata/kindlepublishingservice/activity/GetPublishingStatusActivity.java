@@ -36,6 +36,8 @@ public class GetPublishingStatusActivity {
         // Return a GetPublishingStatusResponse object. When populating the response,
         // you will need to convert the list of PublishingStatusItems to a list of PublishingStatusRecords.
         // Follow the pattern used in GetBookActivity when converting the list of BookRecommendations.
-        return new GetPublishingStatusResponse(publishingStatusHistory);
+        // There's another constructor too
+        return GetPublishingStatusResponse.builder().
+                withPublishingStatusHistory(publishingStatusHistory).build();
     }
 }

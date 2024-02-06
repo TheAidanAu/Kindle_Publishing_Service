@@ -70,8 +70,6 @@ public class SubmitBookForPublishingActivity {
                 PublishingRecordStatus.QUEUED,
                 bookPublishRequest.getBookId());
 
-
-
         return SubmitBookForPublishingResponse.builder()
                 .withPublishingRecordId(item.getPublishingRecordId())
                 .build();

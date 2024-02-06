@@ -90,7 +90,7 @@ public class PublishingStatusDao {
 
         List<PublishingStatusItem> results = dynamoDbMapper.query(PublishingStatusItem.class, queryExpression);
         if (results.isEmpty()) {
-            throw new PublishingStatusNotFoundException("There are no Publishing Statuses found with this Publishing Record ID!");
+            throw new PublishingStatusNotFoundException("There are no Publishing Statuses found for this Publishing Record ID!");
         }
         return results;
     }
