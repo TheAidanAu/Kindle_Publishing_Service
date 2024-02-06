@@ -60,9 +60,12 @@ public class SubmitBookForPublishingActivity {
 
         }
 
-        // TODO: Submit the BookPublishRequest for processing
+        // TODO: Submit the BookPublishRequest for asynchronous processing
         bookPublishRequestManager.addBookPublishRequest(bookPublishRequest);
 
+        // Add a record into the PublishingStatus table with publishing state QUEUED
+        // bookPublishRequest.getPublishingRecordId() returns a generated publishingRecordId for the submission
+        // (Use the publishingRecordId call GetPublishingStatus to get the publishing status info on the publish request)
         PublishingStatusItem item =  publishingStatusDao.setPublishingStatus(bookPublishRequest.getPublishingRecordId(),
                 PublishingRecordStatus.QUEUED,
                 bookPublishRequest.getBookId());

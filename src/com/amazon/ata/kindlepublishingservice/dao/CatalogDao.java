@@ -77,6 +77,10 @@ public class CatalogDao {
         return latestBook;
     }
 
+    /*
+    Check if a Book ID exists in the catalog.
+    Supposedly, a book still exists even if it's inactive
+     */
     public void validateBookExists(String bookId) {
         CatalogItemVersion bookToValidate = this.getLatestVersionOfBook(bookId);
         if (bookToValidate == null) {
