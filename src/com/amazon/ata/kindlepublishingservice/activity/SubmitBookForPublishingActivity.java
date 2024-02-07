@@ -54,11 +54,14 @@ public class SubmitBookForPublishingActivity {
     public SubmitBookForPublishingResponse execute(SubmitBookForPublishingRequest request) {
         final BookPublishRequest bookPublishRequest = BookPublishRequestConverter.toBookPublishRequest(request);
 
+        // if there's a Book ID, we only want to publish books which are already in our catalog
         if (request.getBookId() != null) {
             // TODO: If there is a book ID in the request, validate it exists in our catalog
             catalogDao.validateBookExists(request.getBookId());
-
         }
+
+        //If there isn't a bookId, the submission is for a new book.
+        // A new bookId will be generated when the book is published
 
         // TODO: Submit the BookPublishRequest for asynchronous processing
         bookPublishRequestManager.addBookPublishRequest(bookPublishRequest);

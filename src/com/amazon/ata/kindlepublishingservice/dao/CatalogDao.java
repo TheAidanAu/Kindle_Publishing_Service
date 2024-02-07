@@ -27,7 +27,7 @@ public class CatalogDao {
     }
 
     /**
-     * Returns the latest version of the book from the catalog corresponding to the specified book id.
+     * Returns the ACTIVE and latest version of the book from the catalog corresponding to the specified book id.
      * Throws a BookNotFoundException if the latest version is not active or no version is found.
      * @param bookId Id associated with the book.
      * @return The corresponding CatalogItem from the catalog table.
@@ -79,7 +79,7 @@ public class CatalogDao {
 
     /*
     Check if a Book ID exists in the catalog.
-    Supposedly, a book still exists even if it's inactive
+    A book can either be active or inactive
      */
     public void validateBookExists(String bookId) {
         CatalogItemVersion bookToValidate = this.getLatestVersionOfBook(bookId);
