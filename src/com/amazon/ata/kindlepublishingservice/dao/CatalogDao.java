@@ -5,6 +5,7 @@ import com.amazon.ata.kindlepublishingservice.exceptions.BookNotFoundException;
 import com.amazon.ata.kindlepublishingservice.publishing.KindleFormattedBook;
 import com.amazon.ata.kindlepublishingservice.utils.KindlePublishingUtils;
 
+import com.amazon.ata.recommendationsservice.types.BookGenre;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 import org.apache.commons.lang3.StringUtils;
@@ -87,4 +88,47 @@ public class CatalogDao {
             throw new BookNotFoundException(String.format("The book with the Book ID %s does not exist in the catalog", bookId));
         }
     }
+
+    public CatalogItemVersion create(KindleFormattedBook formattedBook) {
+        // publish a new book to the Catalog
+        // Generate a new bookId for a new book
+        String bookId = KindlePublishingUtils.generateBookId();
+        CatalogItemVersion newBook = new CatalogItemVersion();
+        newBook.setVersion(1);
+        newBook.setInactive(false);
+        newBook.setBookId(bookId);
+        newBook.setAuthor(formattedBook.getAuthor());
+        newBook.setGenre(formattedBook.getGenre());
+        newBook.setText(formattedBook.getText());
+        newBook.setTitle(formattedBook.getTitle());
+        dynamoDbMapper.save(newBook);
+        return newBook;
+    }
+
+    public CatalogItemVersion update(KindleFormattedBook formattedBook) {
+        // Update a new version of an existing book in the Catalog
+        String bookId = formattedBook.getBookId();
+        // if there IS a bookID, it MAY BE an existing book,
+        // We need to validate if it's in the catalog
+        this.validateBookExists(bookId);
+
+        // Get this current book version so that you can increment the version
+        CatalogItemVersion currentVersion = this.getLatestVersionOfBook(bookId);
+
+        // Use the existing removeBook method to set the current book version to be inactive
+        this.removeBook(bookId);
+
+        CatalogItemVersion newVersion = new CatalogItemVersion();
+        newVersion.setBookId(bookId);
+        newVersion.setVersion(currentVersion.getVersion()+1);
+        newVersion.setInactive(false);
+        newVersion.setAuthor(formattedBook.getAuthor());
+        newVersion.setGenre(formattedBook.getGenre());
+        newVersion.setText(formattedBook.getText());
+        newVersion.setTitle(formattedBook.getTitle());
+        dynamoDbMapper.save(newVersion);
+
+        return newVersion;
+    }
+
 }

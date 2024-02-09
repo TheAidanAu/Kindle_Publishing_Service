@@ -7,7 +7,7 @@ public class NoOpTaskTest {
     @Test
     public void run_completesSuccessfully() {
         // GIVEN
-        NoOpTask task = new NoOpTask();
+        NoOpTask1 task = new NoOpTask1();
 
         // WHEN && THEN
         task.run();
