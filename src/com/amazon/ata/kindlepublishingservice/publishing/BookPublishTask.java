@@ -47,15 +47,14 @@ public class BookPublishTask implements Runnable {
         publishingStatusDao.setPublishingStatus(bookPublishRequest.getPublishingRecordId(),
                 PublishingRecordStatus.IN_PROGRESS,
                 bookPublishRequest.getBookId()
-
         );
         // performs formatting and conversion of the book
         KindleFormattedBook formattedBook = KindleFormatConverter.format(bookPublishRequest);
 
-        CatalogItemVersion book;
+        CatalogItemVersion newBookInCatalog;
 
         try {
-            book = this.createOrUpdate(formattedBook);
+            newBookInCatalog = this.createOrUpdate(formattedBook);
         } catch (BookNotFoundException ex) {
             // if an exception is caught while processing
             // add a FAILED status PublishingStatusItem to the table
@@ -70,7 +69,7 @@ public class BookPublishTask implements Runnable {
             // Add an item to the PublishingStatus table if all the previous steps succeed.
         publishingStatusDao.setPublishingStatus(bookPublishRequest.getPublishingRecordId(),
                 PublishingRecordStatus.SUCCESSFUL,
-                book.getBookId()
+                newBookInCatalog.getBookId()
                 );
     }
 

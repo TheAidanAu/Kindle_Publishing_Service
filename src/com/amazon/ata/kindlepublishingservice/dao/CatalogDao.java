@@ -112,15 +112,15 @@ public class CatalogDao {
         // We need to validate if it's in the catalog
         this.validateBookExists(bookId);
 
-        // Get this current book version so that you can increment the version
-        CatalogItemVersion currentVersion = this.getLatestVersionOfBook(bookId);
-
         // Use the existing removeBook method to set the current book version to be inactive
         this.removeBook(bookId);
 
+        // Get this current book version so that you can increment the version
+        int currentBookVersion = this.getLatestVersionOfBook(bookId).getVersion();
+
         CatalogItemVersion newVersion = new CatalogItemVersion();
         newVersion.setBookId(bookId);
-        newVersion.setVersion(currentVersion.getVersion()+1);
+        newVersion.setVersion(currentBookVersion+1);
         newVersion.setInactive(false);
         newVersion.setAuthor(formattedBook.getAuthor());
         newVersion.setGenre(formattedBook.getGenre());
