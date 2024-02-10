@@ -4,6 +4,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 /*
 Save each book publish request as a collection into this class.
@@ -13,8 +14,10 @@ asynchronous processing
 
 @Singleton
 public class BookPublishRequestManager {
+    //Using a ConcurrentLinkedQueue to make it thread-safe
+    // So that multiple threads can write to and read from the queue
+    private Queue<BookPublishRequest> bookPublishRequests = new ConcurrentLinkedDeque<>();
 
-    private Queue<BookPublishRequest> bookPublishRequests = new LinkedList<>();
 
     @Inject
     public BookPublishRequestManager() {

@@ -4,6 +4,7 @@ import com.amazon.ata.recommendationsservice.types.BookGenre;
 
 /**
  * Class representing a book publish request object.
+ * Also make this class immutable for thread safety
  */
 public final class BookPublishRequest {
 
