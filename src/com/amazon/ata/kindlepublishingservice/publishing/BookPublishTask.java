@@ -74,7 +74,7 @@ public class BookPublishTask implements Runnable {
     }
 
     // This is from the Sequence Diagram
-    public CatalogItemVersion createOrUpdate(KindleFormattedBook formattedBook) {
+    private CatalogItemVersion createOrUpdate(KindleFormattedBook formattedBook) {
         // if there's NO bookId in the request, it's considered a new book
         // we will add a new book to the catalog
         // if there's a bookId in the request, we will attempt to update an existing book in the catalog
