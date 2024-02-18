@@ -1,4 +1,4 @@
-# Unit 6 Project: Kindle Publishing Service
+# Unit 6 Project: Kindle Publishing Service Read ME File
 
 ### Ambiguity, Complexity, and Scope
 
